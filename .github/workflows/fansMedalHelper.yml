@@ -4,12 +4,12 @@ name: fansMedalHelper
 on:
   workflow_dispatch:
 
-  push:
-    branches: 
-      - master
+#   push:
+#     branches: 
+#       - master
 
   schedule:
-    - cron: 27 0 * * *
+    - cron: 27 16 * * *
 
 
 jobs:
