@@ -1,0 +1,44 @@
+name: fansMedalHelper
+
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches: 
+      - master
+
+  schedule:
+    - cron: 27 0 * * *
+
+
+jobs:
+  fansMedalHelper:
+
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Set up Python #安装python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.9      
+
+    - name: Install requirements
+      run: |
+        git clone https://github.com/XiaoMiku01/fansMedalHelper.git
+        cd fansMedalHelper
+        pip install -r requirements.txt
+
+    - name: Modify users.yaml
+      run: |
+        cd fansMedalHelper
+        sed -i "s/access_key:.*$/access_key: ${{ secrets.ACCESS_KEY }}/" users.yaml
+        sed -i "s/MOREPUSH:.*$/MOREPUSH: {\"notifier\":\"pushplus\",\"params\":{\"markdown\":False,\"token\":\"${{ secrets.PUSHPLUS_TOKEN }}\"}}/" users.yaml
+
+    - name: Run!
+      run: |
+        cd fansMedalHelper
+        python3 main.py
